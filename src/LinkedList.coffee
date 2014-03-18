@@ -35,4 +35,17 @@ class LinkedList
     @length += 1
     return @
 
+  at: (index) ->
+    if index > @length or index < 0
+      console.log "Out of bounds"
+      return false
+
+    current = @head
+    i = 0
+    current = current.next while i++ < index
+
+    # TODO: decide to return whether the node itself
+    # or the `data` of the node
+    return current
+
 module?.exports = LinkedList
