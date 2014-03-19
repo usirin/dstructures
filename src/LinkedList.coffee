@@ -97,4 +97,17 @@ class LinkedList
 
     return lastNode
 
+  shift: ->
+    if @length == 0
+      console.log("List is empty")
+      return false
+
+    _head      = @head
+    @head      = _head.next
+    _head.next = null
+    @decrementLength()
+
+    return _head
+
 module?.exports = LinkedList
+
