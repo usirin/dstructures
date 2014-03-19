@@ -6,6 +6,23 @@ class LinkedList
     @head   = null
     @length = 0
 
+  incrementLength: ->
+    @length += 1
+
+  at: (index) ->
+    if index > @length or index < 0
+      console.log "Out of bounds"
+      return false
+
+    current = @head
+    i = 0
+    current = current.next while i++ < index
+
+    return current
+
+  get: (index) ->
+    @at(index).data
+
   append: (data) ->
     unless data
       console.log("Needs an input")
@@ -13,14 +30,15 @@ class LinkedList
 
     unless @head?
       @head = new Node(data)
-      @length += 1
+      @incrementLength()
       return @
 
     # we don't have an empty list.
     current = @head
     current = current.next while current.next?
     current.next = new Node(data)
-    @length += 1
+
+    @incrementLength()
 
     return @
 
@@ -32,24 +50,10 @@ class LinkedList
     restOfTheList = @head
     @head = new Node(data)
     @head.next = restOfTheList
-    @length += 1
+
+    @incrementLength()
+
     return @
-
-  at: (index) ->
-    if index > @length or index < 0
-      console.log "Out of bounds"
-      return false
-
-    current = @head
-    i = 0
-    current = current.next while i++ < index
-
-    # TODO: decide to return whether the node itself
-    # or the `data` of the node
-    return current
-
-  get: (index) ->
-    @at(index).data
 
   insertAt: (index, data) ->
     if index > @length or index < 0
@@ -65,7 +69,7 @@ class LinkedList
     beforeNode.next = newNode
     newNode.next    = restOfTheList
 
-    @length += 1
+    @incrementLength()
 
     return @
 
