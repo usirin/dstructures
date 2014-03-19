@@ -1,5 +1,6 @@
 class Node
   constructor: (@data) ->
+    @next = null
 
 class LinkedList
   constructor: () ->
@@ -8,6 +9,9 @@ class LinkedList
 
   incrementLength: ->
     @length += 1
+
+  decrementLength: ->
+    @length -= 1
 
   at: (index) ->
     if index > @length or index < 0
@@ -72,5 +76,25 @@ class LinkedList
     @incrementLength()
 
     return @
+
+  trim: ->
+    if @length == 0
+      console.log("List is empty")
+      return false
+
+    # handle the list with only one Node
+    unless @head.next
+      _head = @head
+      @head = null
+      @decrementLength()
+      return _head
+
+    nodeBeforeLast = @at(@length - 2)
+    lastNode       = nodeBeforeLast.next
+
+    nodeBeforeLast.next = null
+    @decrementLength()
+
+    return lastNode
 
 module?.exports = LinkedList
