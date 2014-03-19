@@ -95,7 +95,7 @@ class LinkedList
     nodeBeforeLast.next = null
     @decrementLength()
 
-    return lastNode
+    lastNode
 
   shift: ->
     if @length == 0
@@ -107,7 +107,7 @@ class LinkedList
     _head.next = null
     @decrementLength()
 
-    return _head
+    _head
 
   deleteAt: (index) ->
     if index > @length or index < 0
@@ -125,7 +125,7 @@ class LinkedList
 
     @decrementLength()
 
-    return current
+    current
 
   toArray: ->
     current = @head
@@ -134,7 +134,6 @@ class LinkedList
     while current?
       array.push(current.data)
       current = current.next
-
 
     array
 
