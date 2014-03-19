@@ -11,10 +11,10 @@ class LinkedList
     @length += 1
 
   decrementLength: ->
-    @length -= 1
+    @length -= 1 if @length > 0
 
   at: (index) ->
-    if index > @length or index < 0
+    if index >= @length or index < 0
       console.log "Out of bounds"
       return false
 
@@ -25,7 +25,9 @@ class LinkedList
     return current
 
   get: (index) ->
-    @at(index).data
+    node = @at(index)
+    return false unless node
+    return node.data
 
   append: (data) ->
     unless data
