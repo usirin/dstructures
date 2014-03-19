@@ -51,4 +51,22 @@ class LinkedList
   get: (index) ->
     @at(index).data
 
+  insertAt: (index, data) ->
+    if index > @length or index < 0
+      console.log "Out of bounds"
+      return false
+
+    return @prepend(data) if index == 0
+    return @append(data)  if index == @length
+
+    beforeNode      = @at(index - 1)
+    restOfTheList   = beforeNode.next
+    newNode         = new Node(data)
+    beforeNode.next = newNode
+    newNode.next    = restOfTheList
+
+    @length += 1
+
+    return @
+
 module?.exports = LinkedList
