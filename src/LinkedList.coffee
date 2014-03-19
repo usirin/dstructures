@@ -109,5 +109,23 @@ class LinkedList
 
     return _head
 
+  deleteAt: (index) ->
+    if index > @length or index < 0
+      console.log "Out of bounds"
+      return false
+
+    return @shift() if index == 0
+    return @trim()  if index == @length
+
+    prev    = @at(index - 1)
+    current = prev.next
+    rest    = current.next
+
+    prev.next = rest
+
+    @decrementLength()
+
+    return current
+
 module?.exports = LinkedList
 
