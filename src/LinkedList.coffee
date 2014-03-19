@@ -48,7 +48,7 @@ class LinkedList
     # or the `data` of the node
     return current
 
-   get: (index) ->
-     @at(index).data
+  get: (index) ->
+    @at(index).data
 
 module?.exports = LinkedList
