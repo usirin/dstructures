@@ -127,5 +127,16 @@ class LinkedList
 
     return current
 
+  toArray: ->
+    current = @head
+    array = []
+
+    while current?
+      array.push(current.data)
+      current = current.next
+
+
+    array
+
 module?.exports = LinkedList
 
