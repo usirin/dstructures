@@ -137,5 +137,8 @@ class LinkedList
 
     array
 
+  toString: ->
+    @toArray().toString()
+
 module?.exports = LinkedList
 
