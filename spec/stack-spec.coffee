@@ -45,9 +45,9 @@ describe "Stack", ->
   describe "#pop", ->
     beforeEach ->
       @stackWithData = (new Stack)
-        .push "first"
-        .push "second"
-        .push "third"
+        .push("first")
+        .push("second")
+        .push("third")
 
     it "returns false when the stack is empty", ->
       expect(@stack.pop()).toBe false
