@@ -142,7 +142,6 @@ describe "LinkedList", ->
         expect(node.data).toBe 1
 
       it "returns the last node", ->
-        # TODO: remove the magic string `third`
         node = @llWithData.trim()
         expect(node.data).toBe 'third'
 
@@ -158,25 +157,20 @@ describe "LinkedList", ->
 
     describe "#shift", ->
       it "returns false when list is empty", ->
-        expect(@ll.trim()).toBe false
+        expect(@ll.shift()).toBe false
 
-      it "handles lists that has only one node specially", ->
-        node = @ll.append(1).trim()
-        expect(node.data).toBe 1
-
-      it "returns the last node", ->
-        # TODO: remove the magic string `third`
-        node = @llWithData.trim()
-        expect(node.data).toBe 'third'
+      it "returns the first node", ->
+        node = @llWithData.shift()
+        expect(node.data).toBe 'first'
 
       it "removes the last node", ->
-        node = @llWithData.trim()
-        node2 = @llWithData.trim()
+        node = @llWithData.shift()
+        node2 = @llWithData.shift()
         expect(node).toNotEqual node2
 
       it "decrements length", ->
         length = @llWithData.length
-        @llWithData.trim()
+        @llWithData.shift()
         expect(@llWithData.length).toBe length - 1
 
     describe "#deleteAt", ->
