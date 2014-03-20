@@ -37,7 +37,7 @@ class LinkedList
     unless @head?
       @head = new Node(data)
       @incrementLength()
-      return @
+      return this
 
     # we don't have an empty list.
     current = @head
@@ -46,7 +46,7 @@ class LinkedList
 
     @incrementLength()
 
-    return @
+    return this
 
   prepend: (data) ->
     unless data
@@ -59,7 +59,7 @@ class LinkedList
 
     @incrementLength()
 
-    return @
+    return this
 
   insertAt: (index, data) ->
     if index > @length or index < 0
@@ -77,7 +77,7 @@ class LinkedList
 
     @incrementLength()
 
-    return @
+    return this
 
   trim: ->
     if @length == 0
