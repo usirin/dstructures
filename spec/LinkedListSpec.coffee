@@ -179,3 +179,51 @@ describe "LinkedList", ->
         @llWithData.trim()
         expect(@llWithData.length).toBe length - 1
 
+    describe "#deleteAt", ->
+      it "returns false when list is empty", ->
+        expect(@ll.deleteAt(0)).toBe false
+
+      it "returns false when index is negative", ->
+        expect(@ll.deleteAt(-1)).toBe false
+
+      it "returns false when index equals to length", ->
+        expect(@llWithData.deleteAt(@llWithData.length)).toBe false
+
+      it "returns false when index is greater than length", ->
+        expect(@llWithData.deleteAt(@llWithData.length + 1)).toBe false
+
+      it "delegates to shift when index is 0", ->
+        spyOn @llWithData, 'shift'
+        @llWithData.deleteAt(0)
+        expect(@llWithData.shift).toHaveBeenCalled()
+
+      it "delegates to trim when index equals to length - 1", ->
+        spyOn @llWithData, 'trim'
+        @llWithData.deleteAt(@llWithData.length - 1)
+        expect(@llWithData.trim).toHaveBeenCalled()
+
+      it "deletes the node at index and returns it", ->
+        node = @llWithData.at(1)
+        expect(@llWithData.deleteAt(1)).toEqual node
+
+      it "decrements the length", ->
+        length = @llWithData.length
+        @llWithData.deleteAt(1)
+        expect(@llWithData.length).toBe length - 1
+
+    describe "#toArray", ->
+      it "converts list to array", ->
+        expect(@ll.toArray()).toEqual []
+        array = [
+          'first'
+          'second'
+          'third'
+        ]
+        expect(@llWithData.toArray()).toEqual array
+
+    describe "#toString", ->
+      it "converts list to string", ->
+        expect(@ll.toString()).toEqual ""
+        expect(@llWithData.toString()).toEqual "first,second,third"
+
+
