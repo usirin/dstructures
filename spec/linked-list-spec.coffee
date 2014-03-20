@@ -1,4 +1,4 @@
-LinkedList = require '../src/LinkedList'
+LinkedList = require '../src/linked-list'
 
 describe "LinkedList", ->
   describe "when it is just initialized", ->
