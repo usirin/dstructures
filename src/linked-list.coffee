@@ -1,6 +1,4 @@
-class Node
-  constructor: (@data) ->
-    @next = null
+Node = require "./single-node"
 
 class LinkedList
   constructor: () ->
