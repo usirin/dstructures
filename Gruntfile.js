@@ -10,13 +10,22 @@ module.exports = function (grunt) {
   var config = {
     dist: 'dist',
     src: 'src',
-    distTest: 'test/dist',
-    srcTest: 'test/src'
   };
 
   // Project configuration.
   grunt.initConfig({
     config: config,
+
+    jasmine_node: {
+      options: {
+        forceExit: true,
+        match: '.',
+        matchall: false,
+        coffee: true,
+      },
+      all: ['spec/']
+    },
+
     clean: {
       dist: {
         files: [
@@ -24,7 +33,6 @@ module.exports = function (grunt) {
             dot: true,
             src: [
               '<%= config.dist %>/*',
-              '<%= config.distTest %>/*',
               '!<%= config.dist %>/.git*'
             ]
           }
@@ -41,15 +49,6 @@ module.exports = function (grunt) {
           ext: '.js'
         }]
       },
-      test: {
-        files: [{
-          expand: true,
-          cwd: '<%= config.srcTest %>',
-          src: '{,*/}*.spec.coffee',
-          dest: '<%= config.distTest %>',
-          ext: '.spec.js'
-        }]
-      }
     },
     jshint: {
       options: {
@@ -66,88 +65,17 @@ module.exports = function (grunt) {
       },
       dist: {
         files: '<%= config.src %>/*',
-        tasks: ['coffee:dist', 'simplemocha:backend']
-      },
-      test: {
-        files: '<%= config.srcTest %>/specs/*',
-        tasks: ['coffee:test', 'simplemocha:backend']
-      }
-    },
-    simplemocha: {
-      options: {
-        globals: [
-        'sinon',
-        'chai',
-        'should',
-        'expect',
-        'assert',
-        'AssertionError',
-        ],
-        timeout: 3000,
-        ignoreLeaks: false,
-        // grep: '*.spec',
-        ui: 'bdd',
-        reporter: 'spec'
-      },
-      backend: {
-        src: [
-          // add chai and sinon globally
-          'test/support/globals.js',
-
-          // tests
-          'test/dist/**/*.spec.js',
-        ],
+        tasks: ['coffee:dist']
       },
     },
   });
 
-  grunt.registerTask('coverageBackend', 'Test backend files as well as code coverage.', function () {
-    var done = this.async();
-
-    var path = './test/support/runner.js';
-
-    var options = {
-      cmd: 'istanbul',
-      grunt: false,
-      args: [
-        'cover',
-        '--default-excludes',
-        '-x', 'app/**',
-        '--report', 'lcov',
-        '--dir', './coverage/backend',
-        path
-      ],
-      opts: {
-        // preserve colors for stdout in terminal
-        stdio: 'inherit',
-      },
-    };
-
-    function doneFunction(error, result) {
-      if (result && result.stderr) {
-        process.stderr.write(result.stderr);
-      }
-
-      if (result && result.stdout) {
-        grunt.log.writeln(result.stdout);
-      }
-
-      // abort tasks in queue if there's an error
-      done(error);
-    }
-
-    grunt.util.spawn(options, doneFunction);
-  });
-
+  grunt.loadNpmTasks('grunt-jasmine-node');
 
   // Default task.
   grunt.registerTask('default', ['coffee', 'jshint']);
 
-  grunt.registerTask('test', [
-    'clean',
-    'coffee',
-    'simplemocha:backend',
-  ]);
+  grunt.registerTask('test', ['jasmine_node']);
 
   grunt.registerTask('coverage', [
     'clean',
