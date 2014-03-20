@@ -112,12 +112,12 @@ class LinkedList
     _head
 
   deleteAt: (index) ->
-    if index > @length or index < 0
+    if index >= @length or index < 0
       console.log "Out of bounds"
       return false
 
     return @shift() if index == 0
-    return @trim()  if index == @length
+    return @trim()  if index == @length - 1
 
     prev    = @at(index - 1)
     current = prev.next
