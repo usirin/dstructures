@@ -6,25 +6,15 @@ describe "Stack", ->
 
   describe "#constructor", ->
     it "has zero length", ->
-      expect(@stack.length).toEqual 0
+      expect(@stack.length()).toEqual 0
 
-    it "has null head", ->
-      expect(@stack.head).toBeNull()
+  describe "#peek", ->
+    it "returns false when empty", ->
+      expect(@stack.peek()).toEqual false
 
-  describe "#incrementLength", ->
-    it "increments length", ->
-      @stack.incrementLength()
-      expect(@stack.length).toEqual 1
-
-  describe "#decrementLength", ->
-    it "decrements length", ->
-      @stack.length = 3 # test purposes
-      @stack.decrementLength()
-      expect(@stack.length).toEqual 2
-
-    it "doesn't decrement to a negative value", ->
-      @stack.decrementLength()
-      expect(@stack.length).toEqual 0
+    it "returns the next value without removing it", ->
+      spyOn(@stack.list, 'get').andReturn 'data'
+      expect(@stack.peek()).toEqual 'data'
 
   describe "#push", ->
     it "returns false when there is no input", ->
@@ -32,15 +22,15 @@ describe "Stack", ->
 
     it "pushes data to the top of the stack", ->
       @stack.push('data')
-      expect(@stack.head.data).toBe 'data'
+      expect(@stack.peek()).toBe 'data'
 
     it "returns the object for chaining purposes", ->
       expect(@stack.push('data')).toBe @stack
 
-    it "increments length by one", ->
-      length = @stack.length
+    xit "increments length by one", ->
+      length = @stack.length()
       @stack.push('data')
-      expect(@stack.length).toBe length + 1
+      expect(@stack.length()).toBe length + 1
 
   describe "#pop", ->
     beforeEach ->
@@ -58,9 +48,9 @@ describe "Stack", ->
 
     it "removes the node from the stack", ->
       @stackWithData.pop()
-      expect(@stackWithData.head.data).toNotEqual "third"
+      expect(@stackWithData.peek()).toNotEqual "third"
 
-    it "decrements the length", ->
+    xit "decrements the length", ->
       @stackWithData.pop()
-      expect(@stackWithData.length).toBe 2
+      expect(@stackWithData.length()).toBe 2
 
