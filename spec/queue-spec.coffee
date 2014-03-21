@@ -43,11 +43,33 @@ describe "Queue", ->
       expect(@q.tail.data).toBe 'first'
       expect(@q.head.data).toBe 'third'
 
-    it "has a head and tail that point to the same element when there is only one", ->
+    it "has a head == tail", ->
       @q.push('first')
       expect(@q.tail.data).toEqual @q.head.data
 
     it "increments length", ->
       @q.push('data')
       expect(@q.length).toBe 1
+
+  describe "#pop", ->
+    beforeEach ->
+      @qD = (new Queue)
+        .push('first')
+        .push('second')
+        .push('third')
+
+    it "returns false when it is empty", ->
+      expect(@q.pop()).toBe false
+
+    it "pops from tail", ->
+      node = @qD.pop()
+      expect(node.data).toEqual 'first'
+
+    it "has a tail for correct node after pop", ->
+      @qD.pop()
+      expect(@qD.tail.data).toEqual "second"
+
+    it "decrements the length", ->
+      @qD.pop()
+      expect(@qD.length).toEqual 2
 

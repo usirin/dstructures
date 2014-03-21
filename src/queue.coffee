@@ -34,5 +34,17 @@ class Queue
 
     return this
 
+  pop: ->
+    unless @length > 0
+      console.log "Empty queue"
+      return false
+
+    node = @tail
+    @tail = node.prev
+    node.prev = null
+
+    @decrementLength()
+
+    return node
 
 module?.exports = Queue
