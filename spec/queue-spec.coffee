@@ -4,52 +4,36 @@ describe "Queue", ->
   beforeEach ->
     @q = new Queue
 
-  it "has null head", ->
-    expect(@q.head).toBeNull()
-
-  it "has null tail", ->
-    expect(@q.tail).toBeNull()
-
-  it "has zero length", ->
-    expect(@q.length).toEqual 0
-
-  describe "#incrementLength", ->
-    it "increments length", ->
-      expect(@q.incrementLength()).toEqual 1
-
-  describe "#decrementLength", ->
-    it "doesn't decrement length to a negative value", ->
-      @q.decrementLength()
-      expect(@q.length).toEqual 0
-
-    it "decrements length", ->
-      @q.length = 3
-      @q.decrementLength()
-      expect(@q.length).toEqual 2
-
   describe "#push", ->
     it "returns false when there is no input", ->
       expect(@q.push()).toBe false
 
     it "pushes data to top of the queue", ->
       @q.push "data"
-      expect(@q.head.data).toBe "data"
+      expect(@q.list.first()).toBe "data"
 
     it "returns itself for chainining", ->
       expect(@q.push("data")).toBe @q
 
     it "has a tail that points to the first inned element", ->
       @q.push('first').push('second').push('third')
-      expect(@q.tail.data).toBe 'first'
-      expect(@q.head.data).toBe 'third'
+      expect(@q.list.last()).toBe 'first'
+      expect(@q.list.first()).toBe 'third'
 
     it "has a head == tail", ->
       @q.push('first')
-      expect(@q.tail.data).toEqual @q.head.data
+      expect(@q.list.first()).toEqual @q.list.last()
 
     it "increments length", ->
       @q.push('data')
-      expect(@q.length).toBe 1
+      expect(@q.length()).toBe 1
+
+  describe "#peek", ->
+    it "returns the first element without removing it", ->
+      @q.push('first')
+      expect(@q.peek()).toEqual 'first'
+      @q.push('second')
+      expect(@q.peek()).toEqual 'first'
 
   describe "#pop", ->
     beforeEach ->
@@ -63,13 +47,9 @@ describe "Queue", ->
 
     it "pops from tail", ->
       node = @qD.pop()
-      expect(node.data).toEqual 'first'
-
-    it "has a tail for correct node after pop", ->
-      @qD.pop()
-      expect(@qD.tail.data).toEqual "second"
+      expect(node).toEqual 'first'
 
     it "decrements the length", ->
       @qD.pop()
-      expect(@qD.length).toEqual 2
+      expect(@qD.length()).toEqual 2
 

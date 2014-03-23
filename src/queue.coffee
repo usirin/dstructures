@@ -1,50 +1,26 @@
-Node = require "./doubly-node"
+DoublyLinkedList = require "./doubly-linked-list"
 
 class Queue
   constructor: ->
-    @head   = null
-    @tail   = null
-    @length = 0
+    @list = new DoublyLinkedList
 
-  incrementLength: ->
-    @length += 1
+  length: ->
+    @list.length
 
-  decrementLength: ->
-    @length -= 1 if @length > 0
+  peek: ->
+    @list.last()
 
   push: (data) ->
-    unless data
-      console.log "Needs input"
-      return false
+    return false unless data
 
-    # cache it so that we can
-    # deal with it later
-    restOfTheList = @head
-
-    newNode = new Node(data)
-    @head = newNode
-    @head.next = restOfTheList
-
-    restOfTheList?.prev = newNode
-
-    # change tail only if the queue is empty
-    @tail ?= @head
-
-    @incrementLength()
+    @list.prepend(data)
 
     return this
 
   pop: ->
-    unless @length > 0
-      console.log "Empty queue"
-      return false
+    return false unless @length() > 0
 
-    node = @tail
-    @tail = node.prev
-    node.prev = null
+    @list.trim().data
 
-    @decrementLength()
-
-    return node
 
 module?.exports = Queue
