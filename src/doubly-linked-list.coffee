@@ -26,6 +26,12 @@ class DoublyLinkedList
     return false unless node
     node.data
 
+  first: ->
+    @get(0)
+
+  last: ->
+    @tail.data
+
   append: (data) ->
     return false unless data?
 

@@ -103,6 +103,14 @@ describe "DoublyLinkedList", ->
         expect(@dD.append('fourth').get(3)).toEqual 'fourth'
         expect(@dD.append('fifth').get(4)).toEqual 'fifth'
 
+    describe "#first", ->
+      it "returns the first element", ->
+        expect(@dD.first()).toEqual "first"
+
+    describe "#last", ->
+      it "returns the last element", ->
+        expect(@dD.last()).toEqual "third"
+
     describe "#insertAt", ->
       it "returns false when index is out of bounds", ->
         expect(@dD.insertAt(-1, 'dumb')).toEqual false
