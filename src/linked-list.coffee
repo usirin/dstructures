@@ -12,9 +12,7 @@ class LinkedList
     @length -= 1 if @length > 0
 
   at: (index) ->
-    if index >= @length or index < 0
-      console.log "Out of bounds"
-      return false
+    return false unless 0 <= index < @length
 
     current = @head
     i = 0
@@ -28,9 +26,7 @@ class LinkedList
     return node.data
 
   append: (data) ->
-    unless data
-      console.log("Needs an input")
-      return false
+    return false unless data
 
     unless @head?
       @head = new Node(data)
@@ -47,9 +43,7 @@ class LinkedList
     return this
 
   prepend: (data) ->
-    unless data
-      console.log("Needs an input")
-      return false
+    return false unless data
 
     restOfTheList = @head
     @head = new Node(data)
@@ -60,9 +54,7 @@ class LinkedList
     return this
 
   insertAt: (index, data) ->
-    if index > @length or index < 0
-      console.log "Out of bounds"
-      return false
+    return false unless 0 <= index <= @length
 
     return @prepend(data) if index == 0
     return @append(data)  if index == @length
@@ -78,9 +70,7 @@ class LinkedList
     return this
 
   trim: ->
-    if @length == 0
-      console.log("List is empty")
-      return false
+    return false if @length == 0
 
     # handle the list with only one Node
     unless @head.next
@@ -98,9 +88,7 @@ class LinkedList
     lastNode
 
   shift: ->
-    if @length == 0
-      console.log("List is empty")
-      return false
+    return false if @length == 0
 
     _head      = @head
     @head      = _head.next
@@ -110,9 +98,7 @@ class LinkedList
     _head
 
   deleteAt: (index) ->
-    if index >= @length or index < 0
-      console.log "Out of bounds"
-      return false
+    return false unless 0 <= index < @length
 
     return @shift() if index == 0
     return @trim()  if index == @length - 1
