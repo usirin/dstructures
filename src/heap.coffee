@@ -43,6 +43,12 @@ class Heap
   incrementLength: -> @length += 1
   decrementLength: -> @length -= 1 if @length > 0
 
+  lastNode: ->
+    path = Heap.calculateNodePath(@length)
+    current = @root
+    current = current[direction] for direction in path
+    return current
+
   push: (data) ->
     newNode = new Node(data)
 
@@ -89,6 +95,27 @@ class Heap
     @bubbleUp @push data
 
     return this
+
+  pop: ->
+    root = @root
+    lastNode = @lastNode()
+    parentOfLastNode = lastNode.parent
+
+    lastNode.left = root.left
+    lastNode.right = root.right
+    lastNode.parent = null
+
+    if @length % 2 == 0
+      parentOfLastNode.left = null
+    else
+      parentOfLastNode.right = null
+
+    root.left = root.right = null
+
+    @root = lastNode
+    @decrementLength()
+
+    return root
 
 module.exports = Heap
 

@@ -3,6 +3,7 @@ Heap = require "../src/heap"
 describe "Heap", ->
   beforeEach ->
     @heap = new Heap
+    @heapWithData = (new Heap).insert(10).insert(30).insert(20)
 
   describe "constuctor", ->
     it "has zero length", ->
@@ -93,5 +94,16 @@ describe "Heap", ->
       expect(@heap.root.left.data).toEqual 20
       expect(@heap.root.right.data).toEqual 10
 
+  describe "#lastNode", ->
+    it "returns the last node", ->
+      expect(@heapWithData.lastNode().data).toEqual 20
 
+  describe "#pop", ->
+    it "returns the root element", ->
+      expect(@heapWithData.pop().data).toEqual 30
+
+    it "moves last node to root", ->
+      @heapWithData.pop()
+      @heapWithData.pop()
+      expect(@heapWithData.root.data).toEqual 10
 
