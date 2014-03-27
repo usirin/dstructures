@@ -97,18 +97,14 @@ class Heap
     return this
 
   pop: ->
-    root = @root
-    lastNode = @lastNode()
+    [root, lastNode] = [@root, @lastNode()]
     parentOfLastNode = lastNode.parent
 
-    lastNode.left = root.left
-    lastNode.right = root.right
+    [lastNode.left, lastNode.right] = [root.left, root.right]
     lastNode.parent = null
 
-    if @length % 2 == 0
-      parentOfLastNode.left = null
-    else
-      parentOfLastNode.right = null
+    direction = Heap.DIRECTIONS[@length % 2]
+    parentOfLastNode[direction] = null
 
     root.left = root.right = null
 

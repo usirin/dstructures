@@ -107,3 +107,7 @@ describe "Heap", ->
       @heapWithData.pop()
       expect(@heapWithData.root.data).toEqual 10
 
+    it "decrements length", ->
+      @heapWithData.pop()
+      expect(@heapWithData.length).toEqual 2
+
