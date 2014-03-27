@@ -1,6 +1,6 @@
 Node = require "./tree-node"
 
-defaultCompareFn = (a, b) -> a - b
+defaultCompareFn = (a, b) -> a.data - b.data
 
 class Heap
   @PARENT: "parent"
@@ -83,7 +83,7 @@ class Heap
 
   bubbleUp: (node) ->
     if node.parent isnt null
-      if @compare(node.data, node.parent.data) > 0
+      if @compare(node, node.parent) > 0
         Heap.swap(node, node.parent)
         @bubbleUp(node.parent)
     else
@@ -112,6 +112,45 @@ class Heap
     @decrementLength()
 
     return root
+
+  # This has really long body,
+  # and requires lots of comments
+  # Code smell, refactor later.
+  bubbleDown: (node) ->
+    # node has 2 children, regular parent node
+    if node.left and node.right
+      # parent element doesn't satisfy the
+      # compare functionality so it needs swapping
+      if @compare(node, node.left) < 0 and @compare(node, node.right) < 0
+        # left child is greater than right
+        # swap with left child
+        if @compare(node.left, node.right) > 0
+          Heap.swap(node.left, node)
+          @bubbleDown(node.left)
+        # swap with right child
+        else if @compare(node.right, node.left) > 0
+          Heap.swap(node.right, node)
+          @bubbleDown(node.right)
+    # if we are in this conditional, it means that
+    # we don't have a right child, we only have
+    # left child. Same condition in 2 different ifs
+    # probably will need to refactor.
+    else if node.left isnt null and @compare(node.left, node) > 0
+      Heap.swap(node.left, node)
+      @bubbleDown(node.left)
+    # we are in a leaf, so stop.
+    # this one produces empty body at JS code.
+    # will need a refactor.
+    else if node.left is null and node.right is null
+      return @root
+
+  remove: ->
+    throw new Error "Heap is already empty" if @length is 0
+
+    node = @pop()
+    @bubbleDown @root
+
+    node.data
 
 module.exports = Heap
 

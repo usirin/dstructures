@@ -111,3 +111,30 @@ describe "Heap", ->
       @heapWithData.pop()
       expect(@heapWithData.length).toEqual 2
 
+  describe "#bubbleDown", ->
+    it "swaps parrent node with one of its children if necessary", ->
+      @heap.push(10)
+      @heap.push(30)
+      @heap.push(20)
+      @heap.push(40)
+      @heap.bubbleDown(@heap.root)
+      expect(@heap.root.data).toEqual 30
+      expect(@heap.root.left.data).toEqual 40
+
+  describe "#remove", ->
+    it "throws an error if heap is empty", ->
+      expect(=> @heap.remove()).toThrow("Heap is already empty")
+
+    it "removes the root element", ->
+      @heapWithData.remove()
+      expect(@heapWithData.root.data).not.toEqual 30
+
+    it "returns the root element", ->
+      expect(@heapWithData.remove()).toEqual 30
+
+    it "sorts data accordingly", ->
+      @heapWithData.insert(5)
+      @heapWithData.remove()
+      expect(@heapWithData.root.data).toEqual 20
+      expect(@heapWithData.root.right.data).toEqual 5
+
