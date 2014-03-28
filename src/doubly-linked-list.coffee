@@ -9,10 +9,14 @@ class DoublyLinkedList
   incrementLength: -> @length += 1
   decrementLength: -> @length -= 1 if @length > 0
 
+  # Returns the node instance at given index.
   at: (index) ->
-    return false unless (0 <= index < @length)
+    throw new Error "Out of bounds" unless 0 <= index < @length
 
-    if index < (@length / 2)
+    # Start from beginning if the
+    # is less than the half of its
+    # length, otherwise start from the end.
+    if index < @length / 2
       current = @head
       current = current.next for i in [0...index]
     else
@@ -21,51 +25,72 @@ class DoublyLinkedList
 
     return current
 
+  # Returns the data of the node at given index.
   get: (index) ->
-    node = @at(index)
-    return false unless node
-    node.data
+    @at(index).data
 
+  # Helper function to get first
+  # node's data in the list.
   first: ->
     @get(0)
 
+  # Helper function to get last
+  # node's data in the list.
   last: ->
-    @tail.data
+    @get(@length - 1)
 
+  # Add data to end of list.
+  #
+  # data - could be any object
+  #
+  # Returns LinkedList object for chaining.
   append: (data) ->
-    return false unless data?
+    throw new Error "List is empty" unless data?
 
     newNode = new Node(data)
 
     if @length == 0
       @head = newNode
     else
-      lastNode = @tail
-      lastNode.next = newNode
-      newNode.prev = lastNode
+      last         = @tail
+      last.next    = newNode
+      newNode.prev = last
 
     @tail = newNode
-    @incrementLength()
 
+    @incrementLength()
     return this
 
+  # Adds data to end of list.
+  #
+  # data - could be any object
+  #
+  # Returns LinkedList object for chaining.
   prepend: (data) ->
-    return false unless data?
+    throw new Error "List is empty" unless data?
 
     newNode = new Node(data)
 
     if @length == 0
       @tail = newNode
     else
-      [firstNode, firstNode.prev, newNode.next] = [@head, newNode, firstNode]
+      first        = @head
+      first.prev   = newNode
+      newNode.next = first
 
     @head = newNode
-    @incrementLength()
 
+    @incrementLength()
     return this
 
+  # Adds data to given index.
+  #
+  # index
+  # data - could be any object
+  #
+  # Returns LinkedList object for chaining
   insertAt: (index, data) ->
-    return false unless 0 <= index <= @length
+    throw new Error "Out of bounds" unless 0 <= index <= @length
 
     return @prepend(data) if index is 0
     return @append(data)  if index is @length
@@ -86,11 +111,11 @@ class DoublyLinkedList
     leftBound.next = rightBound.prev = newNode
 
     @incrementLength()
-
     return this
 
+  # Removes last element and returns it.
   trim: ->
-    return false if @length is 0
+    throw new Error "List is empty" if @length is 0
 
     # cache tail
     last = @tail
@@ -110,11 +135,17 @@ class DoublyLinkedList
       @head = @tail = null
 
     @decrementLength()
+    return last.data
 
-    return last
-
+  # Removes first element and returns it.
   shift: ->
-    return false if @length is 0
+    throw new Error "List is empty" if @length is 0
+
+    # Basically same thing as trim,
+    # just replace head with tail,
+    # last with first.
+    # I love doubly linked list.
+    # it is fat, but fast!
 
     first = @head
     @head = first.next
@@ -125,12 +156,10 @@ class DoublyLinkedList
       @tail = @head = null
 
     @decrementLength()
-
-    return first
+    return first.data
 
   deleteAt: (index) ->
-    return false if @length is 0
-    return false unless 0 <= index < @length
+    throw new Error "Out of bounds" unless 0 <= index < @length
 
     return @shift() if index is 0
     return @trim()  if index is @length - 1
@@ -147,9 +176,9 @@ class DoublyLinkedList
     toBeDeleted.next = toBeDeleted.prev = null
 
     @decrementLength()
+    return toBeDeleted.data
 
-    return toBeDeleted
-
+  # Array representation of the list.
   toArray: ->
     current = @head
     array = []
@@ -158,8 +187,9 @@ class DoublyLinkedList
       array.push current.data
       current = current.next
 
-    array
+    return array
 
+  # String representation of the list.
   toString: ->
     @toArray().toString()
 

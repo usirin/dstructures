@@ -28,8 +28,8 @@ describe "DoublyLinkedList", ->
       expect(@d.length).toEqual 0
 
   describe "#append", ->
-    it "returns false with empty argument", ->
-      expect(@d.append()).toEqual false
+    it "throws an error with empty argument", ->
+      expect(=> @d.append()).toThrow "List is empty"
 
     it "adds adds a node to empty list", ->
       @d.append('data')
@@ -51,8 +51,8 @@ describe "DoublyLinkedList", ->
       expect(@d.append('data')).toBe @d
 
   describe "#prepend", ->
-    it "returns false with empty argument", ->
-      expect(@d.prepend()).toEqual false
+    it "throws an error with empty argument", ->
+      expect(=> @d.prepend()).toThrow "List is empty"
 
     it "adds a node to empty list", ->
       @d.prepend('data')
@@ -78,10 +78,10 @@ describe "DoublyLinkedList", ->
         .append('third')
 
     describe "#at", ->
-      it "returns false when index is out of bounds", ->
-        expect(@dD.at(-1)).toEqual false
-        expect(@dD.at(@dD.length)).toEqual false
-        expect(@dD.at(@dD.length+1)).toEqual false
+      it "throws an error when index is out of bounds", ->
+        expect(=> @dD.at(-1)).toThrow "Out of bounds"
+        expect(=> @dD.at(@dD.length)).toThrow "Out of bounds"
+        expect(=> @dD.at(@dD.length+1)).toThrow "Out of bounds"
 
       it "returns the node at given index", ->
         expect(@dD.at(0).data).toEqual 'first'
@@ -91,10 +91,10 @@ describe "DoublyLinkedList", ->
         expect(@dD.append('fifth').at(4).data).toEqual 'fifth'
 
     describe "#get", ->
-      it "returns false when index is out of bounds", ->
-        expect(@dD.get(-1)).toEqual false
-        expect(@dD.get(@dD.length)).toEqual false
-        expect(@dD.get(@dD.length+1)).toEqual false
+      it "throws an error when index is out of bounds", ->
+        expect(-> @dD.get(-1)).toThrow()
+        expect(-> @dD.get(@dD.length)).toThrow()
+        expect(-> @dD.get(@dD.length+1)).toThrow()
 
       it "returns the data at given index", ->
         expect(@dD.get(0)).toEqual 'first'
@@ -112,9 +112,9 @@ describe "DoublyLinkedList", ->
         expect(@dD.last()).toEqual "third"
 
     describe "#insertAt", ->
-      it "returns false when index is out of bounds", ->
-        expect(@dD.insertAt(-1, 'dumb')).toEqual false
-        expect(@dD.insertAt(@dD.length+1, 'dumb')).toEqual false
+      it "throws an error when index is out of bounds", ->
+        expect(=> @dD.insertAt(-1, 'dumb')).toThrow "Out of bounds"
+        expect(=> @dD.insertAt(@dD.length+1, 'dumb')).toThrow "Out of bounds"
 
       it "prepends data if index is zero", ->
         spyOn @dD, 'prepend'
@@ -135,49 +135,46 @@ describe "DoublyLinkedList", ->
         expect(@dD.insertAt(2, 'dumb')).toBe @dD
 
     describe "#trim", ->
-      it "returns false when list is empty", ->
-        expect(@d.trim()).toBe false
+      it "throws an error when list is empty", ->
+        expect(=> @d.trim()).toThrow "List is empty"
 
       it "handles the case where there is only one node", ->
         node = @d.append(1).trim()
-        expect(node.data).toBe 1
+        expect(node).toBe 1
         expect(@d.head).toBeNull()
         expect(@d.tail).toBeNull()
 
       it "returns the last node", ->
         node = @dD.trim()
-        expect(node.data).toEqual "third"
+        expect(node).toEqual "third"
 
       it "decrements length", ->
         @dD.trim()
         expect(@dD.length).toEqual 2
 
     describe "#shift", ->
-      it "returns false when list is empty", ->
-        expect(@d.shift()).toBe false
+      it "throws an error when list is empty", ->
+        expect(=> @d.shift()).toThrow "List is empty"
 
       it "handles the case where there is only one node", ->
         node = @d.append(1).shift()
-        expect(node.data).toEqual 1
+        expect(node).toEqual 1
         expect(@d.head).toBeNull()
         expect(@d.tail).toBeNull()
 
       it "returns the first node", ->
         node = @dD.shift()
-        expect(node.data).toEqual "first"
+        expect(node).toEqual "first"
 
       it "decrements length", ->
         @dD.shift()
         expect(@dD.length).toEqual 2
 
     describe "#deleteAt", ->
-      it "returns false when list is empty", ->
-        expect(@d.deleteAt(0)).toBe false
-
-      it "returns false when index is out of bounds", ->
-        expect(@dD.deleteAt(-1)).toBe false
-        expect(@dD.deleteAt(3)).toBe false
-        expect(@dD.deleteAt(4)).toBe false
+      it "throws an error when index is out of bounds", ->
+        expect(=> @dD.deleteAt(-1)).toThrow "Out of bounds"
+        expect(=> @dD.deleteAt(3)).toThrow "Out of bounds"
+        expect(=> @dD.deleteAt(4)).toThrow "Out of bounds"
 
       it "delegates to trim when index equals index - 1", ->
         spyOn @dD, 'trim'
@@ -190,8 +187,7 @@ describe "DoublyLinkedList", ->
         expect(@dD.shift).toHaveBeenCalled()
 
       it "deletes the node at index and returns it", ->
-        node = @dD.at(1)
-        expect(@dD.deleteAt(1)).toBe node
+        expect(@dD.deleteAt(1)).toBe 'second'
 
       it "decrements length", ->
         @dD.deleteAt(1)
