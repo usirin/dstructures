@@ -1,60 +1,85 @@
 Node = require "./single-node"
 
 class LinkedList
-  constructor: () ->
+  constructor: ->
     @head   = null
     @length = 0
 
-  incrementLength: ->
-    @length += 1
+  incrementLength: -> @length += 1
+  decrementLength: -> @length -= 1 if @length > 0
 
-  decrementLength: ->
-    @length -= 1 if @length > 0
-
+  # Returns Node instance at given index
   at: (index) ->
-    return false unless 0 <= index < @length
+    throw new Error "Out of bounds" unless 0 <= index < @length
 
     current = @head
-    i = 0
-    current = current.next while i++ < index
+    current = current.next for i in [0...index]
 
     return current
 
+  # Returns the actual data
+  # inside the node at given index
   get: (index) ->
     node = @at(index)
-    return false unless node
     return node.data
 
+  # Appends the data to the
+  # end of the list.
+  #
+  # data - could be any type of object
+  #
+  # Returns the LinkedList object for chaining.
   append: (data) ->
-    return false unless data
+    throw new Error "Illegal input" unless data
 
-    unless @head?
+    # tricky part is here
+    # if the list is empty we don't
+    # have a pointer to anywhere so
+    # trying to traverse the list
+    # will end up throwing errors.
+    # So, this is basically the initiation
+    # of the list.
+    if @head is null
       @head = new Node(data)
-      @incrementLength()
-      return this
-
-    # we don't have an empty list.
-    current = @head
-    current = current.next while current.next?
-    current.next = new Node(data)
+    # since we have a pointer to at least
+    # one node, which means it is traversable,
+    # go traverse it, find the last node, and
+    # stick the new data to the end of it.
+    else
+      current = @head
+      current = current.next while current.next?
+      current.next = new Node(data)
 
     @incrementLength()
-
     return this
 
+  # Adds the data to the beginning of the list.
+  #
+  # data - could be any type of object
+  #
+  # Returns the LinkedList object for chanining.
   prepend: (data) ->
-    return false unless data
+    throw new Error "Illegal input" unless data
 
+    # easier than append, this is where
+    # singly linked list is performant.
+    # cache head, create new node with given
+    # data, and merge them.
     restOfTheList = @head
     @head = new Node(data)
     @head.next = restOfTheList
 
     @incrementLength()
-
     return this
 
+  # Inserts a data at given index.
+  #
+  # index
+  # data - could be any object.
+  #
+  # Returns LinkedList object for chaining.
   insertAt: (index, data) ->
-    return false unless 0 <= index <= @length
+    throw new Error "Out of bounds" unless 0 <= index <= @length
 
     return @prepend(data) if index == 0
     return @append(data)  if index == @length
@@ -69,60 +94,78 @@ class LinkedList
 
     return this
 
+  # Returns the last element's data of the list.
   trim: ->
-    return false if @length == 0
+    throw new Error "List is empty" if @length == 0
 
-    # handle the list with only one Node
-    unless @head.next
-      _head = @head
+    # Another tricky part:
+    # there is a special case for
+    # a list with only one node.
+    # General flow works like, go
+    # to the node before last one
+    # and cache it and do the operations.
+    # But since only one node, there is not
+    # a node before the last one because we have
+    # only one node.
+    if @head.next is null
+      last = @head
       @head = null
-      @decrementLength()
-      return _head
+    # this is the regular trimming operation.
+    # go to the node before last one, cache it.
+    # clear its next pointer.
+    else
+      beforeLast      = @at(@length - 2)
+      last            = beforeLast.next
+      beforeLast.next = null
 
-    nodeBeforeLast = @at(@length - 2)
-    lastNode       = nodeBeforeLast.next
-
-    nodeBeforeLast.next = null
     @decrementLength()
+    return last.data
 
-    lastNode
-
+  # Returns the first element of the list
   shift: ->
-    return false if @length == 0
+    throw new Error "List is empty" if @length == 0
 
-    _head      = @head
-    @head      = _head.next
-    _head.next = null
+    # Since we have a pointer to the
+    # beginning of the list, it is way
+    # easier than trimming.
+    first      = @head
+    @head      = first.next
+    first.next = null
+
     @decrementLength()
+    return first.data
 
-    _head
-
+  # Deletes a node at given index.
+  #
+  # index - index of the node to be deleted.
+  #
+  # Returns the deleted node's data.
   deleteAt: (index) ->
-    return false unless 0 <= index < @length
+    throw new Error "Out of bounds" unless 0 <= index < @length
 
     return @shift() if index == 0
     return @trim()  if index == @length - 1
 
-    prev    = @at(index - 1)
-    current = prev.next
-    rest    = current.next
-
+    prev      = @at(index - 1)
+    current   = prev.next
+    rest      = current.next
     prev.next = rest
 
     @decrementLength()
+    return current.data
 
-    current
-
+  # Returns the array representation of list.
   toArray: ->
     current = @head
-    array = []
+    array   = []
 
     while current?
-      array.push(current.data)
+      array.push current.data
       current = current.next
 
-    array
+    return array
 
+  # Returns the string form of Linked List.
   toString: ->
     @toArray().toString()
 

@@ -31,8 +31,8 @@ describe "LinkedList", ->
         expect(@ll.length).toEqual 0
 
     describe "#append", ->
-      it "returns false when there is no input", ->
-        expect(@ll.append()).toBe false
+      it "throws an error when there is no input", ->
+        expect(=> @ll.append()).toThrow "Illegal input"
 
       it "assings a new node to head if list is empty", ->
         @ll.append('data')
@@ -49,8 +49,8 @@ describe "LinkedList", ->
         expect(@ll.length).toBe length+1
 
     describe "#prepend", ->
-      it "returns false when there is no input", ->
-        expect(@ll.prepend()).toBe false
+      it "throws an error when there is no input", ->
+        expect(=> @ll.prepend()).toThrow "Illegal input"
 
       it "assigns a new node to head if list is empty", ->
         @ll.prepend('data')
@@ -67,15 +67,14 @@ describe "LinkedList", ->
         expect(@ll.length).toBe length+1
 
     describe "#at", ->
-      it "returns false for negative index", ->
-        expect(@ll.at(-1)).toBe false
+      it "throws an error for negative index", ->
+        expect(=> @ll.at(-1)).toThrow "Out of bounds"
 
-      it "returns false for index equals to its length", ->
-        expect(@ll.at(@ll.length)).toBe false
+      it "throws an error for index equals to its length", ->
+        expect(=> @ll.at(@ll.length)).toThrow "Out of bounds"
 
-      it "returns false for an index greater than length", ->
-        result = @ll.at(@ll.length + 2)
-        expect(result).toBe false
+      it "throws an error for an index greater than length", ->
+        expect(=> @ll.at(@ll.length + 2)).toThrow "Out of bounds"
 
       it "returns the Node object with the index", ->
         first  = @llWithData.at(0)
@@ -86,15 +85,14 @@ describe "LinkedList", ->
         expect(third.data).toBe  'third'
 
     describe "#get", ->
-      it "returns false for negative index", ->
-        expect(@ll.get(-1)).toBe false
+      it "throws an error for negative index", ->
+        expect(-> @ll.get(-1)).toThrow()
 
-      it "returns false for index equals to its length", ->
-        expect(@ll.get(@ll.length)).toBe false
+      it "throws an error for index equals to its length", ->
+        expect(-> @ll.get(@ll.length)).toThrow()
 
-      it "returns false for an index greater than length", ->
-        result = @ll.get(@ll.length + 2)
-        expect(result).toBe false
+      it "throws an error for an index greater than length", ->
+        expect(-> @ll.get(@ll.length + 2)).toThrow()
 
       it "returns the Node object with the index", ->
         first  = @llWithData.get(0)
@@ -105,12 +103,12 @@ describe "LinkedList", ->
         expect(third).toBe  'third'
 
     describe "#insertAt", ->
-      it "returns false for negative index", ->
-        expect(@ll.insertAt(-1, 'dumb')).toBe false
+      it "throws an error for negative index", ->
+        expect(=> @ll.insertAt(-1, 'dumb')).toThrow "Out of bounds"
 
-      it "returns false for an index greater than length", ->
-        result = @ll.insertAt(@ll.length + 2, 'dumb')
-        expect(result).toBe false
+      it "throws an error for an index greater than length", ->
+        result = => @ll.insertAt(@ll.length + 2, 'dumb')
+        expect(result).toThrow "Out of bounds"
 
       it "prepends data if index is zero", ->
         spyOn @ll, 'prepend'
@@ -134,16 +132,16 @@ describe "LinkedList", ->
         expect(@llWithData.length).toBe length+1
 
     describe "#trim", ->
-      it "returns false when list is empty", ->
-        expect(@ll.trim()).toBe false
+      it "throws an error when list is empty", ->
+        expect(=> @ll.trim()).toThrow "List is empty"
 
       it "handles lists that has only one node specially", ->
         node = @ll.append(1).trim()
-        expect(node.data).toBe 1
+        expect(node).toBe 1
 
       it "returns the last node", ->
         node = @llWithData.trim()
-        expect(node.data).toBe 'third'
+        expect(node).toBe 'third'
 
       it "removes the last node", ->
         node = @llWithData.trim()
@@ -156,12 +154,12 @@ describe "LinkedList", ->
         expect(@llWithData.length).toBe length - 1
 
     describe "#shift", ->
-      it "returns false when list is empty", ->
-        expect(@ll.shift()).toBe false
+      it "throws an error when list is empty", ->
+        expect(=> @ll.shift()).toThrow "List is empty"
 
       it "returns the first node", ->
         node = @llWithData.shift()
-        expect(node.data).toBe 'first'
+        expect(node).toEqual 'first'
 
       it "removes the last node", ->
         node = @llWithData.shift()
@@ -174,17 +172,16 @@ describe "LinkedList", ->
         expect(@llWithData.length).toBe length - 1
 
     describe "#deleteAt", ->
-      it "returns false when list is empty", ->
-        expect(@ll.deleteAt(0)).toBe false
+      it "throws an error when index is negative", ->
+        expect(=> @ll.deleteAt(-1)).toThrow "Out of bounds"
 
-      it "returns false when index is negative", ->
-        expect(@ll.deleteAt(-1)).toBe false
+      it "throws an error when index equals to length", ->
+        deleteAt = => @llWithData.deleteAt(@llWithData.length)
+        expect(deleteAt).toThrow "Out of bounds"
 
-      it "returns false when index equals to length", ->
-        expect(@llWithData.deleteAt(@llWithData.length)).toBe false
-
-      it "returns false when index is greater than length", ->
-        expect(@llWithData.deleteAt(@llWithData.length + 1)).toBe false
+      it "throws an error when index is greater than length", ->
+        deleteAt = => @llWithData.deleteAt(@llWithData.length + 1)
+        expect(deleteAt).toThrow "Out of bounds"
 
       it "delegates to shift when index is 0", ->
         spyOn @llWithData, 'shift'
@@ -197,8 +194,7 @@ describe "LinkedList", ->
         expect(@llWithData.trim).toHaveBeenCalled()
 
       it "deletes the node at index and returns it", ->
-        node = @llWithData.at(1)
-        expect(@llWithData.deleteAt(1)).toEqual node
+        expect(@llWithData.deleteAt(1)).toEqual 'second'
 
       it "decrements the length", ->
         length = @llWithData.length
