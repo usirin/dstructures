@@ -43,13 +43,28 @@ class Heap
   incrementLength: -> @length += 1
   decrementLength: -> @length -= 1 if @length > 0
 
+  insert: (data) ->
+    throw new Error "Illegal input" unless data
+
+    @_bubbleUp @_push data
+
+    return this
+
+  remove: ->
+    throw new Error "Heap is already empty" if @length is 0
+
+    node = @_pop()
+    @_bubbleDown @root
+
+    node.data
+
   lastNode: ->
     path = Heap.calculateNodePath(@length)
     current = @root
     current = current[direction] for direction in path
     return current
 
-  push: (data) ->
+  _push: (data) ->
     newNode = new Node(data)
 
     # check if the heap is empty
@@ -81,22 +96,7 @@ class Heap
 
     return newNode
 
-  bubbleUp: (node) ->
-    if node.parent isnt null
-      if @compare(node, node.parent) > 0
-        Heap.swap(node, node.parent)
-        @bubbleUp(node.parent)
-    else
-      return
-
-  insert: (data) ->
-    throw new Error "Illegal input" unless data
-
-    @bubbleUp @push data
-
-    return this
-
-  pop: ->
+  _pop: ->
     [root, lastNode] = [@root, @lastNode()]
     parentOfLastNode = lastNode.parent
 
@@ -113,44 +113,36 @@ class Heap
 
     return root
 
-  # This has really long body,
-  # and requires lots of comments
-  # Code smell, refactor later.
-  bubbleDown: (node) ->
-    # node has 2 children, regular parent node
-    if node.left and node.right
-      # parent element doesn't satisfy the
-      # compare functionality so it needs swapping
-      if @compare(node, node.left) < 0 and @compare(node, node.right) < 0
-        # left child is greater than right
-        # swap with left child
-        if @compare(node.left, node.right) > 0
-          Heap.swap(node.left, node)
-          @bubbleDown(node.left)
-        # swap with right child
-        else if @compare(node.right, node.left) > 0
-          Heap.swap(node.right, node)
-          @bubbleDown(node.right)
-    # if we are in this conditional, it means that
-    # we don't have a right child, we only have
-    # left child. Same condition in 2 different ifs
-    # probably will need to refactor.
-    else if node.left isnt null and @compare(node.left, node) > 0
+  _bubbleUp: (node) ->
+    if node.parent isnt null
+      if @compare(node, node.parent) > 0
+        Heap.swap(node, node.parent)
+        @_bubbleUp(node.parent)
+    else
+      return
+
+  _bubbleDown: (node) ->
+    if node.right
+      shouldSwap = @compare(node, node.left) < 0 and
+                   @compare(node, node.right) < 0
+
+      if shouldSwap
+        @_swapWithChild(node)
+    else if node.left and @compare(node, node.left) < 0
       Heap.swap(node.left, node)
-      @bubbleDown(node.left)
-    # we are in a leaf, so stop.
-    # this one produces empty body at JS code.
-    # will need a refactor.
-    else if node.left is null and node.right is null
+      @_bubbleDown(node.left)
+    else if node.left is null and node.right is null # it's a leaf
       return @root
 
-  remove: ->
-    throw new Error "Heap is already empty" if @length is 0
+  _swapWithChild: (parent) ->
+    greaterChild = @_greaterChild(parent)
+    Heap.swap(parent, greaterChild)
+    @_bubbleDown(greaterChild)
 
-    node = @pop()
-    @bubbleDown @root
-
-    node.data
+  _greaterChild: (parent) ->
+    if @compare(parent.left, parent.right) > 0
+      return parent.left
+    return parent.right
 
 module.exports = Heap
 
