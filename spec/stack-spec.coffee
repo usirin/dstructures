@@ -9,16 +9,16 @@ describe "Stack", ->
       expect(@stack.length()).toEqual 0
 
   describe "#peek", ->
-    it "returns false when empty", ->
-      expect(@stack.peek()).toEqual false
+    it "throws an error when empty", ->
+      expect(-> @stack.peek()).toThrow()
 
     it "returns the next value without removing it", ->
       spyOn(@stack.list, 'get').andReturn 'data'
       expect(@stack.peek()).toEqual 'data'
 
   describe "#push", ->
-    it "returns false when there is no input", ->
-      expect(@stack.push()).toBe false
+    it "throws an error when there is no input", ->
+      expect(=> @stack.push()).toThrow('Illegal input')
 
     it "pushes data to the top of the stack", ->
       @stack.push('data')
@@ -39,8 +39,8 @@ describe "Stack", ->
         .push("second")
         .push("third")
 
-    it "returns false when the stack is empty", ->
-      expect(@stack.pop()).toBe false
+    it "throws an error when the stack is empty", ->
+      expect(=> @stack.pop()).toThrow('List is empty')
 
     it "pops the data out from the stack", ->
       expect(@stackWithData.pop()).toBe "third"
