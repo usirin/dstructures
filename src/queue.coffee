@@ -20,7 +20,7 @@ class Queue
   pop: ->
     return false unless @length() > 0
 
-    @list.trim().data
+    @list.trim()
 
 
 module?.exports = Queue
