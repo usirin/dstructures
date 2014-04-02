@@ -1,4 +1,4 @@
-Node = require "./single-node"
+Node = require "./nodes/single"
 
 class LinkedList
   constructor: ->

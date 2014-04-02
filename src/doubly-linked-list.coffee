@@ -1,4 +1,4 @@
-Node = require "./doubly-node"
+Node = require "./nodes/doubly"
 
 class DoublyLinkedList
   constructor: ->

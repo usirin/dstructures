@@ -1,4 +1,4 @@
-Node = require "./tree-node"
+Node = require "./nodes/tree"
 
 class BinarySearchTree
   constructor: (opt_dataArray) ->

@@ -1,4 +1,4 @@
-Node = require "./tree-node"
+Node = require "./nodes/tree"
 
 defaultCompareFn = (a, b) -> a.data - b.data
 

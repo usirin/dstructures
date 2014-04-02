@@ -122,7 +122,7 @@ describe "Heap", ->
       expect(@heap.root.left.data).toEqual 40
 
   describe "_swapWithChild", ->
-    it "swaps with right child", ->
+    it "swaps with correct child", ->
       @heap._push(10)
       @heap._push(30)
       @heap._push(20)
