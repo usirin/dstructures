@@ -1,6 +1,6 @@
 Node = require "./nodes/tree"
 
-defaultCompareFn = (a, b) -> a.data - b.data
+defaultCompareFn = (a, b) -> a - b
 
 class Heap
   @PARENT: "parent"
@@ -14,10 +14,8 @@ class Heap
     @tail = null
     @length = 0
 
-    # we are taking a custom compare function
-    # because heap can be used for things
-    # other than numbers or strings
-    @compare = if compareFn then compareFn else defaultCompareFn
+    compareFn = compareFn || defaultCompareFn
+    @compare = (a, b) -> compareFn(a.data, b.data)
 
   @calculateNodePath: (index) ->
     throw new Error "Illegal input" unless index % 1 is 0
@@ -35,7 +33,7 @@ class Heap
       # used Math.floor because `//` gave compile error
       index = Math.floor(index / 2)
 
-    pathArray
+    return pathArray
 
   @swap: (first, second) ->
     [first.data, second.data] = [second.data, first.data]
@@ -56,7 +54,7 @@ class Heap
     node = @_pop()
     @_bubbleDown @root
 
-    node.data
+    return node.data
 
   lastNode: ->
     path = Heap.calculateNodePath(@length)
@@ -118,31 +116,24 @@ class Heap
       if @compare(node, node.parent) > 0
         Heap.swap(node, node.parent)
         @_bubbleUp(node.parent)
-    else
-      return
 
   _bubbleDown: (node) ->
+    return @root if node.isLeaf()
+
     if node.right
       shouldSwap = @compare(node, node.left) < 0 and
                    @compare(node, node.right) < 0
 
       if shouldSwap
         @_swapWithChild(node)
-    else if node.left and @compare(node, node.left) < 0
+    else
       Heap.swap(node.left, node)
       @_bubbleDown(node.left)
-    else if node.left is null and node.right is null # it's a leaf
-      return @root
 
   _swapWithChild: (parent) ->
-    greaterChild = @_greaterChild(parent)
+    greaterChild = parent.greaterChild(@compare)
     Heap.swap(parent, greaterChild)
     @_bubbleDown(greaterChild)
-
-  _greaterChild: (parent) ->
-    if @compare(parent.left, parent.right) > 0
-      return parent.left
-    return parent.right
 
 module.exports = Heap
 

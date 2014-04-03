@@ -18,7 +18,9 @@ describe "Heap", ->
     it "takes a custom function to compare elements", ->
       fn = (a, b) -> b - a
       heapWithCustomCompare = new Heap(fn)
-      expect(heapWithCustomCompare.compare).toBe fn
+      x = {data: 5}
+      y = {data: 7}
+      expect(heapWithCustomCompare.compare(x, y)).toEqual 2
 
   describe "#calculateNodePath", ->
     it "throws an error if input is illegal", ->
@@ -129,11 +131,6 @@ describe "Heap", ->
       @heap._push(40)
       @heap._swapWithChild(@heap.root)
       expect(@heap.root.data).toEqual 30
-
-  describe "_greaterChild", ->
-    it "returns greater child", ->
-      gC = @heapWithData._greaterChild(@heapWithData.root)
-      expect(gC.data).toEqual 20
 
   describe "#remove", ->
     it "throws an error if heap is empty", ->
